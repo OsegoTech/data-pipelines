@@ -1,19 +1,20 @@
 import express from 'express';
 import cors from 'cors';
 import mysql from 'mysql';
+import e from 'express';
 
 const app = express();
 app.use(cors())
 
 
-const pools = mysql.createPool({
+const emr = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
     database: ['emr']
 })
 
-const pool2 = mysql.createPool({
+const etl = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
@@ -21,11 +22,63 @@ const pool2 = mysql.createPool({
 
 });
 
+const dwh = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: ['dwh']
+});
+
+// connectio to emr database
+
+emr.getConnection((err, connection) => {
+    if (err) {
+        console.error('error connecting to emr database')
+    } else {
+        console.log('connected to emr database')
+    }
+});
+
+// connection to etl database
+etl.getConnection((err) => {
+    if (err) {
+        console.error('error connecting to etl database')
+        console.error('error connecting to etl database')
+    } else {
+        console.log('connected to etl database')
+    }
+})
+
+// connection to dwh database
+dwh.getConnection((err) => {
+    if (err) {
+        console.error('error connecting to dwh database')
+    } else {
+        console.log('connected to dwh database')
+    }
+})
+
+etl.query('CALL Populate_etl_tables()', (error, results) => {
+    if (error) {
+        console.error(error)
+    } else {
+        console.log('etl tables populated')
+    }
+})
+
+dwh.query('CALL Populate_dwh_tables()', (error, results) => {
+    if (error) {
+        console.error(error)
+    } else {
+        console.log('dwh tables populated')
+    }
+})
+
 
 
 
 app.get('/source-data/patients', (req, res) => {
-    pools.query('SELECT * FROM patients',(error, results) => {
+    emr.query('SELECT * FROM patients',(error, results) => {
         if (error) {
             console.error(error)
             res.status(500).send('error retrieving results')
@@ -37,7 +90,7 @@ app.get('/source-data/patients', (req, res) => {
 
 
 app.get('/source-data/visits', (req, res) => {
-    pools.query('SELECT * FROM visits',(error, results) => {
+    emr.query('SELECT * FROM visits',(error, results) => {
         if (error) {
             console.error(error)
             res.status(500).send('error retrieving results')
@@ -48,8 +101,9 @@ app.get('/source-data/visits', (req, res) => {
 })
 
 
+
 app.get('/destination-data/patients', (req, res) => {
-    pool2.query('SELECT * FROM etl_patients',(error, results) => {
+    etl.query('SELECT * FROM etl_patients',(error, results) => {
         if (error) {
             console.error(error)
             res.status(500).send('error retrieving results')
@@ -60,7 +114,7 @@ app.get('/destination-data/patients', (req, res) => {
 })
 
 app.get('/destination-data/visits', (req, res) => {
-    pool2.query('SELECT * FROM etl_visits',(error, results) => {
+    etl.query('SELECT * FROM etl_visits',(error, results) => {
         if (error) {
             console.error(error)
             res.status(500).send('error retrieving results')
@@ -69,6 +123,30 @@ app.get('/destination-data/visits', (req, res) => {
         }
     })
 })
+
+
+app.get('/dwh-data/visits', (req, res) => {
+    dwh.query('SELECT * FROM dwh_visits',(error, results) => {
+        if (error) {
+            console.error(error)
+            res.status(500).send('error retrieving results')
+        } else {
+            res.json(results)
+        }
+    })
+})
+
+app.get('/dwh-data/patients', (req, res) => {
+    dwh.query('SELECT * FROM dwh_patients',(error, results) => {
+        if (error) {
+            console.error(error)
+            res.status(500).send('error retrieving results')
+        } else {
+            res.json(results)
+        }
+    })
+})
+
 
 
 
