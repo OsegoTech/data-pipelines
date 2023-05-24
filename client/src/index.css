@@ -1,0 +1,71 @@
+.container {
+  width: 100%;
+  max-width: 1024px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(247, 242, 236);
+  margin: 0px auto;
+  padding: 5px 30px 30px 30px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+table{
+  border: 1px solid black;
+  padding: 4px;
+}
+th{
+  border: 1px solid black;
+  padding: 4px;
+}
+tbody{
+  border: 1px solid black;
+  padding: 10px;
+}
+tr{
+  border: 1px solid black;
+  padding: 4px;
+}
+td{
+  border: 1px solid black;
+  padding: 4px;
+}
+
+.row{
+  display: flex;
+  gap: 30px;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 2px solid black;
+  padding: 30px;
+  border-radius: 10px;
+  height: fit-content;
+}
+
+form label{
+  font-weight: bold;
+}
+
+form input{
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.submit {
+  background-color: rgb(154, 185, 197);
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
