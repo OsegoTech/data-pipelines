@@ -1,4 +1,6 @@
 import "./App.css";
+import DWHPatients from "./pages/DWHPatinetsData";
+import DWHVisits from "./pages/DWHVisits";
 import ETLPatients from "./pages/ETlPatients";
 import ETLPatientsVisits from "./pages/ETlPatientsVisits";
 import SourceData from "./pages/HospitalData";
@@ -17,6 +19,8 @@ function App() {
           <VisitsSourceData />
           <ETLPatients />
           <ETLPatientsVisits />
+          <DWHPatients />
+          <DWHVisits />
         </div>
       {/* </div> */}
     </div>
